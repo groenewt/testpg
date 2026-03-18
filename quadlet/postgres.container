@@ -1,0 +1,33 @@
+[Unit]
+Description=Postgres with AGE, Vector
+#after
+#requires
+#wants
+
+[Container]
+ContainerName=ranger-postgres
+Environment=POSTGRES_USER=postgres 
+Environment=POSTGRES_PASSWORD=postgres
+Environment=POSTGRES_DB=postgres
+Exec=postgres
+Image=groenewt/test:pg
+Volume=PGDATA:/var/lib/postgresql/data
+
+PublishPort=5432:5432
+HostName=postgres.graph.internal
+HealthCmd=['su -c "pg_isready -q" postgres'
+HealthInterval=10s
+HealthTimeout=2s
+HealthStartPeriod=60s
+HealthRetries=5
+
+
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutStartSec=60
+Type=Notify 
+
+[Install]
+WantedBy=default.target
